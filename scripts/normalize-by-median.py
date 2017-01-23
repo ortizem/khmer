@@ -55,7 +55,7 @@ import textwrap
 from khmer import khmer_args
 from contextlib import contextmanager
 from khmer.khmer_args import (build_counting_args, add_loadgraph_args,
-                              report_on_config, info, calculate_graphsize,
+                              report_on_config, info, calculate_graph_size,
                               sanitize_help, check_argument_range)
 from khmer.khmer_args import FileType as khFileType
 import argparse
@@ -329,8 +329,8 @@ def main():  # pylint: disable=too-many-branches,too-many-statements
     check_valid_file_exists(args.input_filenames)
     check_space(args.input_filenames, args.force)
     if args.savegraph:
-        graphsize = calculate_graphsize(args, 'countgraph')
-        check_space_for_graph(args.savegraph, graphsize, args.force)
+        calculate_graph_size(args, 'countgraph')
+        check_space_for_graph(args.savegraph, args.max_tablesize, args.force)
 
     # load or create counting table.
     if args.loadgraph:

@@ -52,7 +52,7 @@ import threading
 import textwrap
 from khmer import khmer_args
 from khmer.khmer_args import (build_counting_args, add_threading_args,
-                              report_on_config, calculate_graphsize,
+                              report_on_config, calculate_graph_size,
                               sanitize_help)
 from khmer.kfile import (check_input_files, check_space_for_graph)
 from khmer.khmer_logger import (configure_logging, log_info, log_error,
@@ -114,8 +114,8 @@ def main():  # pylint: disable=too-many-locals,too-many-branches
 
     check_input_files(args.input_sequence_filename, args.force)
     if args.savegraph:
-        graphsize = calculate_graphsize(args, graph_type)
-        check_space_for_graph(args.savegraph, graphsize, args.force)
+        calculate_graph_size(args, graph_type)
+        check_space_for_graph(args.savegraph, args.max_tablesize, args.force)
     if (not args.squash_output and
             os.path.exists(args.output_histogram_filename)):
         log_error('ERROR: {output} exists; not squashing.',

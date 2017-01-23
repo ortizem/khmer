@@ -144,20 +144,9 @@ def main():
 
     for index, filename in enumerate(filenames):
 
-        rparser = khmer.ReadParser(filename)
         threads = []
         log_info('consuming input {input}', input=filename)
-        for _ in range(args.threads):
-            cur_thrd = \
-                threading.Thread(
-                    target=countgraph.consume_fasta_with_reads_parser,
-                    args=(rparser, )
-                )
-            threads.append(cur_thrd)
-            cur_thrd.start()
-
-        for thread in threads:
-            thread.join()
+        nreads, nkmers = countgraph.consume_fasta_bitsplit(filename, 8, 2)
 
         if index > 0 and index % 10 == 0:
             calculate_graph_size(args, 'countgraph')
@@ -167,7 +156,7 @@ def main():
             countgraph.save(base)
         with open(info_filename, 'a') as info_fh:
             print('through', filename, file=info_fh)
-        total_num_reads += rparser.num_reads
+        total_num_reads += nreads
 
     n_kmers = countgraph.n_unique_kmers()
     log_info('Total number of unique k-mers: {nk}', nk=n_kmers)

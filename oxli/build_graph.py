@@ -50,7 +50,7 @@ import sys
 import khmer
 from khmer import khmer_args
 from khmer.khmer_args import (report_on_config, info, add_threading_args,
-                              calculate_graphsize)
+                              calculate_graph_size)
 from khmer.kfile import check_input_files
 from khmer.kfile import check_space_for_graph
 from oxli import functions as oxfuncs
@@ -79,9 +79,9 @@ def main(args):
     for fname in args.input_filenames:
         check_input_files(fname, args.force)
 
-    graphsize = calculate_graphsize(args, 'nodegraph')
-    space_needed = args.n_tables * graphsize / 8
-    check_space_for_graph(args.output_filename, graphsize, args.force)
+    calculate_graph_size(args, 'nodegraph')
+    check_space_for_graph(args.output_filename, args.max_memory_usage,
+                          args.force)
 
     print('Saving k-mer nodegraph to %s' % base, file=sys.stderr)
     print('Loading kmers from sequences in %s' %

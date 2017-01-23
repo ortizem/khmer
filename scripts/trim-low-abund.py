@@ -55,7 +55,7 @@ from khmer import khmer_args
 from khmer import ReadParser
 
 from khmer.khmer_args import (build_counting_args, add_loadgraph_args,
-                              report_on_config, calculate_graphsize,
+                              report_on_config, calculate_graph_size,
                               sanitize_help)
 from khmer.khmer_args import FileType as khFileType
 from khmer.utils import write_record, broken_paired_reader, ReadBundle
@@ -303,8 +303,8 @@ def main():
     check_valid_file_exists(args.input_filenames)
     check_space(args.input_filenames, args.force)
     if args.savegraph:
-        graphsize = calculate_graphsize(args, graphtype)
-        check_space_for_graph(args.savegraph, graphsize, args.force)
+        calculate_graph_size(args, graphtype)
+        check_space_for_graph(args.savegraph, args.max_tablesize, args.force)
 
     if ('-' in args.input_filenames or '/dev/stdin' in args.input_filenames) \
        and not args.output:

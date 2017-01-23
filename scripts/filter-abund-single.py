@@ -56,7 +56,7 @@ from khmer import ReadParser
 from khmer.utils import broken_paired_reader, write_record
 from khmer import khmer_args
 from khmer.khmer_args import (build_counting_args, report_on_config,
-                              add_threading_args, calculate_graphsize,
+                              add_threading_args, calculate_graph_size,
                               sanitize_help, check_argument_range)
 from khmer.kfile import (check_input_files, check_space,
                          check_space_for_graph,
@@ -126,8 +126,8 @@ def main():
     check_space([args.datafile], args.force)
 
     if args.savegraph:
-        tablesize = calculate_graphsize(args, 'countgraph')
-        check_space_for_graph(args.savegraph, tablesize, args.force)
+        calculate_graph_size(args, 'countgraph')
+        check_space_for_graph(args.savegraph, args.max_tablesize, args.force)
 
     report_on_config(args)
 

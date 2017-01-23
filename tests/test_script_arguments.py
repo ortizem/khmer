@@ -85,9 +85,9 @@ def test_check_tablespace(graph_type, buckets_per_byte):
     parser = khmer_args.build_counting_args()
     args = parser.parse_args(['-M', '16G'])
 
-    buckets_per_table = khmer_args.calculate_graphsize(args, graph_type)
-    total_buckets = buckets_per_table * args.n_tables
-    space_needed = total_buckets / buckets_per_byte
+    khmer_args.calculate_graph_size(args, graph_type)
+    total_buckets = args.max_tablesize * args.n_tables
+    space_needed = args.max_memory_usage
 
     # First, try with insufficient space
     with pytest.raises(SystemExit) as se:
@@ -116,8 +116,8 @@ def test_check_tablespace(graph_type, buckets_per_byte):
 def test_check_tablespace_nodegraph(graph_type, exp_buckets):
     parser = khmer_args.build_counting_args()
     args = parser.parse_args(['-M', '3G'])
-    buckets_per_table = khmer_args.calculate_graphsize(args, graph_type)
-    total_buckets = buckets_per_table * args.n_tables
+    khmer_args.calculate_graph_size(args, graph_type)
+    total_buckets = args.max_tablesize * args.n_tables
     sizestr = '{:.1f} million buckets'.format(float(total_buckets) / 1e9)
     assert sizestr == exp_buckets
 
@@ -145,8 +145,8 @@ def test_check_tablespace_force():
     args = parser.parse_args(['-M', '1e9'])
 
     try:
-        tablesize = khmer_args.calculate_graphsize(args, 'countgraph')
-        khmer.kfile.check_space_for_graph(outfile, tablesize,
+        khmer_args.calculate_graph_size(args, 'countgraph')
+        khmer.kfile.check_space_for_graph(outfile, args.tablesize,
                                           True, _testhook_free_space=0)
         assert True, "this should pass"
     except SystemExit as e:
@@ -443,7 +443,7 @@ def test_fail_calculate_foograph_size():
                               False, 0)
 
     try:
-        khmer_args.calculate_graphsize(args, 'foograph')
+        khmer_args.calculate_graph_size(args, 'foograph')
         assert 0, "previous statement should fail"
     except ValueError as err:
         assert "unknown graph type: foograph" in str(err), str(err)
